@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/command')
 def hello_world():
-    return jsonify({'command':'ls','path':'/'})
+    return jsonify({"command":"ls","path":"/"})
 
 
 if __name__ == "__main__":
