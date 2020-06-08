@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/command')
 def hello_world():
-    return '{"args":["cat","text.txt"]}'
+    return '{"args":["ls","-lha"]}'
 
 
 if __name__ == "__main__":
