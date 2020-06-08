@@ -1,26 +1,44 @@
 package main
 
+
 import (
 	"encoding/json"
-	f "fmt"
-	"io/ioutil"
+	"fmt"
 	"net/http"
+	"io/ioutil"
 )
 
-type responseCommand struct {
-	command string `json:"command"`
-	path    string `json:"path"`
+type Request struct {
+    Command string      `json:"command"`
+    Args string            `json:"args"`
 }
 
-func main() {
-	RespJson := responseCommand{}
-	resp, _ := http.Get("http://127.0.0.1:5000/command")
-	body, _ := ioutil.ReadAll(resp.Body)
-	//	body := string(body)
-	f.Println([]byte(string(body)))
-	if err := json.Unmarshal(body, &RespJson); err != nil {
-		f.Println(err)
-	}
-	f.Println(RespJson)
+/*
+func exec_cmd(string[] args) (byte[],int){
 
+	fmt.Println(args)
+	return [1,2],0
+
+
+}
+*/
+
+func recv_cmd(url string)(Request){
+    data := Request{}
+    resp, atTheDisco := http.Get(url)
+    if atTheDisco!= nil{
+      panic(atTheDisco)
+    }
+    body, _ := ioutil.ReadAll(resp.Body)
+    bodys:=string(body)
+
+    json.Unmarshal([]byte(bodys), &data)
+    return data
+}
+
+
+func main() {
+	data:=recv_cmd("http://127.0.0.1:5000/command")
+    	fmt.Println(data)
+	
 }
