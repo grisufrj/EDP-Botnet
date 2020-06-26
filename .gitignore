@@ -44,4 +44,7 @@ tags
 # Persistent undo
 [._]*.un~
 
+# Fuse hidden
+.fuse_hidden*
+
 # End of https://www.toptal.com/developers/gitignore/api/vim,go
