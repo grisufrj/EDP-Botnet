@@ -1,4 +1,4 @@
-package main 
+package AddingSlave 
 
 import (
   "fmt"
@@ -43,16 +43,3 @@ func Get_slavebd(bd *mongo.Collection, ctx context.Context)([]bson.M){
 }
 
 
-
-
-func main(){
-  exemplo:= bson.D{
-    {Key:"ip", Value:"127.0.0.1"},
-    {Key:"senha", Value:"12345"},
-  }
-  client, bd, ctx := Connect_mongo()
-  Add_slave(exemplo,bd,ctx)
-  result:= Get_slavebd(bd,ctx)
-  fmt.Println(result)
-  defer client.Disconnect(ctx)
-}
