@@ -31,10 +31,19 @@ func Connect_mongo() (*mongo.Client,*mongo.Collection,context.Context){
 func Add_slave(slave primitive.D, bd *mongo.Collection,ctx context.Context) (){
   res, err := bd.InsertOne(ctx, slave)
   if err != nil { panic(err) }
-  fmt.Printf("O dispositivo foi inserido com o ID: %v",res.InsertedID)
+  fmt.Printf("O dispositivo foi inserido com o ID: %v\n",res.InsertedID)
 }
 
-//func Get_slave() ()
+func Get_slavebd(bd *mongo.Collection, ctx context.Context)([]bson.M){
+  var result []bson.M
+  cursor, _ :=bd.Find(ctx,bson.M{})
+  if err:= cursor.All(ctx,&result); err!= nil{panic(err)}
+  return result
+
+}
+
+
+
 
 func main(){
   exemplo:= bson.D{
@@ -43,5 +52,7 @@ func main(){
   }
   client, bd, ctx := Connect_mongo()
   Add_slave(exemplo,bd,ctx)
+  result:= Get_slavebd(bd,ctx)
+  fmt.Println(result)
   defer client.Disconnect(ctx)
 }
