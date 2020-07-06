@@ -27,7 +27,7 @@ func NewSlave(l *log.Logger) *Slave {
 
 // ExecCmd receives the command to execute as a parameter
 // and returns the result of the execution
-func (s *Slave) ExecCmd(cmd *exec.Cmd) []byte {
+func (s *Slave) ExecCmd(cmd *exec.Cmd) *bytes.Buffer {
 	var out bytes.Buffer
 
 	cmd.Stdout = &out
@@ -37,7 +37,7 @@ func (s *Slave) ExecCmd(cmd *exec.Cmd) []byte {
 		panic(err)
 	}
 
-	return out.Bytes()
+	return &out
 }
 
 // RecvCmd asks Master for a command to execute

