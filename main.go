@@ -12,8 +12,13 @@ func main() {
 	s := slave.NewSlave(l)
 	url := "http://localhost:5000"
 	comando := s.RecvCmd(url + "/command")
+
+	// log.Printf("Command: %#v\n", comando)
+
 	resp := s.ExecCmd(comando)
+
+	// log.Printf("Response from ExecCmd: %#v\n", resp)
 	respStatus := s.SendCmd(url+"/send", resp.Bytes())
 
-	log.Println(respStatus)
+	log.Printf("Response Status from SendCmd: %#v\n", respStatus)
 }
