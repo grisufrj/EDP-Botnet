@@ -1,52 +1,78 @@
 package main
 
-import(
-    "fmt"
-    "net"
+import (
+	"fmt"
+	"net"
 )
 
+func scan(ip string, porta int) string {
+	connection, err := net.Dial("tcp", ip)
+	if err != nil {
+		return ""
+	}
 
-func Scan(ip string, porta int) (string) {
-    connection, err := net.Dial("tcp", ip)
-    if err != nil{ return "" }
-
-    connection.Close()
-    fmt.Printf("Porta %d aberta\n",porta)
-    return ip
+	connection.Close()
+	fmt.Printf("Porta %d aberta\n", porta)
+	return ip
 }
 
-func ValidIps() (interface{}){
-    var validIps []*net.IPNet
-    interfaces, err := net.Interfaces()
-    if err != nil {
-        fmt.Print(fmt.Errorf("Endereços Locais: %+v\n", err.Error()))
-        return -1
-    }
+// ValidIps retorna os endereços ips e mac que estão sendo usados na rede
+//
+// []ips, []macs
+//
 
-    for _,i := range interfaces {
-      ip,err := i.Addrs()
-      if err != nil {
-        fmt.Print(fmt.Errorf("Endereços Locais: %+v\n", err.Error()))
-        continue
-      }
-      for _,a := range ip{
-        switch v:= a.(type){
-          case *net.IPNet:
-            fmt.Printf("%v : %s (%s)\n",i.Name,v,v.IP.DefaultMask())
-            validIps = append(validIps, v)
-         }
-       }
-     }
-     return validIps
+type interfaceInfo struct {
+	networkInterface string
+	macAddress       net.HardwareAddr
+	mask             []net.IPMask
+	validIPs         []string
 }
 
-func main(){
-    var ipValidos []string
-    iporta:="127.0.0.1:3306"
-    porta:=3306
-    result := Scan(iporta,porta)
-    if result == "" { fmt.Println("Fudeu") }
-    ipValidos = append(ipValidos,result)
-    ips := ValidIps()
-    fmt.Println(ips)
+func getValidIps() ([]interfaceInfo, error) {
+	var validIps []string
+	infos := []interfaceInfo{}
+	interfaces, err := net.Interfaces()
+	if err != nil {
+		return []interfaceInfo{}, err
+	}
+	var validIPs []string
+	for _, i := range interfaces {
+		ips, err := i.Addrs()
+
+		if err != nil {
+			return []interfaceInfo{}, err
+		}
+		var masks []net.IPMask
+		for _, ip := range ips {
+			var ipType net.IP = []byte(ip.String())
+			fmt.Printf("%v : %s (%s)\n", i.Name, ip, ipType.DefaultMask())
+			masks = append(masks, ipType.DefaultMask())
+			validIps = append(validIps, ip.String())
+		}
+
+		ncInfo := interfaceInfo{
+			networkInterface: i.Name,
+			macAddress:       i.HardwareAddr,
+			mask:             masks,
+			validIPs:         validIPs,
+		}
+		infos = append(infos, ncInfo)
+	}
+	return infos, nil
+}
+
+func main() {
+	var ipValidos []string
+	iporta := "127.0.0.1:3306"
+	porta := 3306
+	result := scan(iporta, porta)
+	if result == "" {
+		fmt.Println("Fudeu")
+	}
+	ipValidos = append(ipValidos, result)
+	ips, err := getValidIps()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(ips)
 }
